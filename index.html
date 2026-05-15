@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAC - Gestor de Qualidade</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Sistema de Reclamações</h1>
+
+  <!-- Formulário de cadastro -->
+  <section id="cadastro">
+    <h2>Nova reclamação</h2>
+    <form id="form-reclamacao">
+      <input type="text" id="nome" placeholder="Nome do cliente" required>
+      <input type="text" id="telefone" placeholder="Telefone" required>
+      <textarea id="reclamacao" placeholder="Descrição da reclamação" required></textarea>
+      <input type="text" id="modelo_moto" placeholder="Modelo da moto">
+      <input type="text" id="placa" placeholder="Placa">
+      <input type="text" id="loja" placeholder="Loja" required>
+      <input type="text" id="plataforma" placeholder="Plataforma da denúncia">
+      <select id="classificacao" required>
+        <option value="">Classificação inicial</option>
+        <option value="nao_prioridade">Não Prioridade</option>
+        <option value="atencao">Atenção</option>
+        <option value="urgente">Urgente</option>
+      </select>
+      <button type="submit">Cadastrar</button>
+    </form>
+  </section>
+
+  <!-- Painel de status -->
+  <section id="painel">
+    <h2>Painel de Acompanhamento</h2>
+    <div id="tabs">
+      <button class="tab active" data-status="nao_prioridade">Não Prioridade</button>
+      <button class="tab" data-status="atencao">Atenção</button>
+      <button class="tab" data-status="urgente">Urgente</button>
+      <button class="tab" data-status="em_aguardo">Em Aguardo</button>
+      <button class="tab" data-status="solucionado">Solucionados</button>
+    </div>
+    <div id="lista"></div>
+  </section>
+
+  <!-- Relatório -->
+  <section id="relatorio">
+    <h2>Relatório Gerencial</h2>
+    <div class="filtros">
+      <label>De: <input type="date" id="data-inicio"></label>
+      <label>Até: <input type="date" id="data-fim"></label>
+      <button onclick="gerarRelatorio()">Gerar</button>
+      <button onclick="window.print()">🖨️ Imprimir</button>
+    </div>
+    <div id="conteudo-relatorio"></div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>

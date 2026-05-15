@@ -1,0 +1,89 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f4f4f4;
+}
+
+section {
+  background: white;
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input, textarea, select {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background: #007acc;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+button:hover {
+  background: #005a9e;
+}
+
+.tab {
+  background: #e0e0e0;
+  color: black;
+  margin: 0 2px;
+}
+
+.tab.active {
+  background: #007acc;
+  color: white;
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.card.urgente.atrasado {
+  border-left: 5px solid red;
+  background: #fff5f5;
+}
+
+.atraso {
+  color: red;
+  font-weight: bold;
+}
+
+#conteudo-relatorio table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+#conteudo-relatorio th, #conteudo-relatorio td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+@media print {
+  header, #cadastro, #tabs, .acoes, .filtros button, #painel button {
+    display: none;
+  }
+  #relatorio {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
