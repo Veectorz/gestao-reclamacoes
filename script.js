@@ -1,5 +1,5 @@
 // SUBSTITUA pelas suas credenciais do Supabase
-const SUPABASE_URL = 'https://jfhzqnjxekxdwpaddgvp.supabase.co/rest/v1/';
+const SUPABASE_URL = 'https://jfhzqnjxekxdwpaddgvp.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmaHpxbmp4ZWt4ZHdwYWRkZ3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MTY3NTYsImV4cCI6MjA5NDM5Mjc1Nn0.YYXKQucG2547oWWlGwJBzCbckvG6JM0B-WznE3X3fR4';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -53,7 +53,7 @@ async function carregarPainel() {
     .order('data_abertura', { ascending: false });
   if (error) return;
   renderLista(data);
-  //carregarDashboard();
+  carregarDashboard();
 }
 
 function renderLista(registros) {
@@ -127,6 +127,14 @@ async function moverParaAguardo(id) {
   carregarPainel();
 }
 
+async function carregarDashboard() {
+  const { data: todas } = await supabase.from('reclamacoes').select('*');
+  if (!todas) return;
+  const porLoja = {};
+  todas.forEach(r => porLoja[r.loja] = (porLoja[r.loja] || 0) + 1);
+  document.getElementById('stats').innerHTML = `<p>Total de reclamações: ${todas.length}</p>
+    <p>Lojas com mais reclamações: ${Object.entries(porLoja).sort((a,b) => b[1]-a[1]).slice(0,5).map(e => `${e[0]} (${e[1]})`).join(', ')}</p>`;
+}
 
 // Relatório
 async function gerarRelatorio() {
