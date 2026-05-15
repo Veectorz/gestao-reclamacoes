@@ -1,14 +1,15 @@
-// SUBSTITUA pelas suas credenciais do Supabase
-const SUPABASE_URL = 'https://jfhzqnjxekxdwpaddgvp.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmaHpxbmp4ZWt4ZHdwYWRkZ3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MTY3NTYsImV4cCI6MjA5NDM5Mjc1Nn0.YYXKQucG2547oWWlGwJBzCbckvG6JM0B-WznE3X3fR4';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const SUPABASE_URL = 'https://jfhzqnjxekxdwpaddgvp.supabase.co'; // sua URL real
+const SUPABASE_ANON_KEY = 'sua-chave-anon-aqui'; // coloque a chave anônima
+
+const { createClient } = supabase; // objeto global 'supabase' da CDN
+const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const form = document.getElementById('form-reclamacao');
 const lista = document.getElementById('lista');
 const tabs = document.querySelectorAll('.tab');
 let statusAtual = 'nao_prioridade';
 
-// Atualiza a lista a cada 30 segundos
+// Atualização automática a cada 30 segundos
 setInterval(carregarPainel, 30000);
 carregarPainel();
 
@@ -28,7 +29,7 @@ form.addEventListener('submit', async (e) => {
     data_ultima_mudanca: new Date().toISOString(),
     prazo_limite: calcularPrazo(document.getElementById('classificacao').value)
   };
-  const { error } = await supabase.from('reclamacoes').insert([dados]);
+  const { error } = await client.from('reclamacoes').insert([dados]);
   if (error) alert('Erro ao cadastrar: ' + error.message);
   else {
     form.reset();
@@ -46,7 +47,7 @@ tabs.forEach(tab => {
 });
 
 async function carregarPainel() {
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from('reclamacoes')
     .select('*')
     .eq('status', statusAtual)
@@ -104,7 +105,7 @@ function formatarPrazo(iso, status) {
 }
 
 async function marcarSolucionado(id) {
-  const { error } = await supabase
+  const { error } = await client
     .from('reclamacoes')
     .update({ status: 'solucionado', data_solucao: new Date().toISOString() })
     .eq('id', id);
@@ -115,10 +116,11 @@ async function marcarSolucionado(id) {
 async function moverParaAguardo(id) {
   const prazo = new Date();
   prazo.setHours(prazo.getHours() + 24);
-  const { error } = await supabase
+  const { error } = await client
     .from('reclamacoes')
     .update({
       status: 'em_aguardo',
+      foi_para_aguardo: true,
       data_ultima_mudanca: new Date().toISOString(),
       prazo_limite: prazo.toISOString()
     })
@@ -128,12 +130,15 @@ async function moverParaAguardo(id) {
 }
 
 async function carregarDashboard() {
-  const { data: todas } = await supabase.from('reclamacoes').select('*');
+  const { data: todas } = await client.from('reclamacoes').select('*');
   if (!todas) return;
   const porLoja = {};
   todas.forEach(r => porLoja[r.loja] = (porLoja[r.loja] || 0) + 1);
-  document.getElementById('stats').innerHTML = `<p>Total de reclamações: ${todas.length}</p>
-    <p>Lojas com mais reclamações: ${Object.entries(porLoja).sort((a,b) => b[1]-a[1]).slice(0,5).map(e => `${e[0]} (${e[1]})`).join(', ')}</p>`;
+  const statsDiv = document.getElementById('stats');
+  if (statsDiv) {
+    statsDiv.innerHTML = `<p>Total de reclamações: ${todas.length}</p>
+      <p>Lojas com mais reclamações: ${Object.entries(porLoja).sort((a,b) => b[1]-a[1]).slice(0,5).map(e => `${e[0]} (${e[1]})`).join(', ')}</p>`;
+  }
 }
 
 // Relatório
@@ -141,7 +146,7 @@ async function gerarRelatorio() {
   const inicio = document.getElementById('data-inicio').value;
   const fim = document.getElementById('data-fim').value;
   if (!inicio || !fim) return alert('Selecione as datas.');
-  const { data, error } = await supabase
+  const { data, error } = await client
     .from('reclamacoes')
     .select('*')
     .gte('data_abertura', inicio + 'T00:00:00')
