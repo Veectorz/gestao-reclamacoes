@@ -1,5 +1,5 @@
 const SUPABASE_URL = 'https://jfhzqnjxekxdwpaddgvp.supabase.co'; // sua URL real
-const SUPABASE_ANON_KEY = 'sua-chave-anon-aqui'; // coloque a chave anônima
+const SUPABASE_ANON_KEY = 'sua-chave-anon-aquieyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmaHpxbmp4ZWt4ZHdwYWRkZ3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4MTY3NTYsImV4cCI6MjA5NDM5Mjc1Nn0.YYXKQucG2547oWWlGwJBzCbckvG6JM0B-WznE3X3fR4'; // coloque a chave anônima
 
 const { createClient } = supabase; // objeto global 'supabase' da CDN
 const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
