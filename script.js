@@ -53,7 +53,7 @@ async function carregarPainel() {
     .order('data_abertura', { ascending: false });
   if (error) return;
   renderLista(data);
-  carregarDashboard();
+  //carregarDashboard();
 }
 
 function renderLista(registros) {
@@ -127,14 +127,6 @@ async function moverParaAguardo(id) {
   carregarPainel();
 }
 
-async function carregarDashboard() {
-  const { data: todas } = await supabase.from('reclamacoes').select('*');
-  if (!todas) return;
-  const porLoja = {};
-  todas.forEach(r => porLoja[r.loja] = (porLoja[r.loja] || 0) + 1);
-  document.getElementById('stats').innerHTML = `<p>Total de reclamações: ${todas.length}</p>
-    <p>Lojas com mais reclamações: ${Object.entries(porLoja).sort((a,b) => b[1]-a[1]).slice(0,5).map(e => `${e[0]} (${e[1]})`).join(', ')}</p>`;
-}
 
 // Relatório
 async function gerarRelatorio() {
